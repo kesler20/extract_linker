@@ -3,8 +3,6 @@ import pandas as pd
 
 path = "3ddigimofs_raw.tab.xlsx"
 
-# this is the algorithm https://chemrxiv.org/engage/api-gateway/chemrxiv/assets/orp/resource/item/630b6fe7d858fb84335f93f5/original/a-database-to-compare-possible-mo-fs-for-volumetric-hydrogen-storage-taking-into-account-the-cost-of-their-building-blocks-supporting-information.pdf
-
 df = pd.read_excel(path)
 
 sample_df = [name for name in df["[_chemical_name_systematic]"][:15]]
