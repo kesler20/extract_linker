@@ -8,13 +8,14 @@ Naming Convention
 each step "step_n" variable contains a list of things that will be removed @ the step n
 the last item in te list is the string which will be replacing all the other strings
 '''
-
+# load the raw file with approximately 10k names
 path = "3ddigimofs_raw.tab.xlsx"
 df = pd.read_excel(path)
 
+# tur the raw names into a list
 sample_df = [name for name in df["[_chemical_name_systematic]"]]
 
-
+# initialise steps 1-7 
 step_1: 'list[str]' = [
     "catena-(", "catena-[", "catena(", "catena[", ""]
 step_2 = [
@@ -32,7 +33,7 @@ step_7b = ["-(%", "%"]
 
 steps = [step_1, step_2, step_3_4, step_5, step_6, step_7a, step_7b]
 
-# apply steps from step 1 to 7 to sample_df
+# apply step 1 to 7 to sample_df
 for step in steps:
     sample_df = [replace_with_string(
         name, step[:-1], step[-1]) for name in sample_df]
