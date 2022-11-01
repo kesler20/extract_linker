@@ -88,7 +88,10 @@ if __name__ == "__main__":
     step_20_21.append("%")
 
     sample_df_21 = [replace_with_string(name,step_20_21,"%") for name in sample_df_16]
-    pp(sample_df_21)
+    
+    sample_df_22a = [replace_with_string(name, ["$"], "%") for name in sample_df_21]
+    sample_df_22b = replace_string_recursively(sample_df_22a,r"%%","%") 
+    pp(sample_df_22b)
 
 
 

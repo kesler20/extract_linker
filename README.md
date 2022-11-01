@@ -20,3 +20,4 @@ and that both the items at steps n and m can be replaced with the item ``step_n_
 #### TODOs
 - [ ] merge and seperate columns by using pandas (fill the unequal rows and columns with NaNs)
 - [ ] seperate step_n_m lists into different steps to be applied individually ?
+- [ ] complete all the steps and test a correct sample (current output yields missing rows)
