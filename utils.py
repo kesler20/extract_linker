@@ -99,10 +99,11 @@ def replace_string_recursively(raw_sample_list: 'list[str]', string_replaced: st
             clean_name = name.replace(string_replaced, string_replacing)
             name = clean_name
         clean_sample_list.append(name)
-    
+
     return clean_sample_list
 
-def remove_substring_from_string_list(raw_sample_list: 'list[str]',sub_string_to_remove: str,separator: str):
+
+def remove_substring_from_string_list(raw_sample_list: 'list[str]', sub_string_to_remove: str, separator: str):
     '''
     Removes all the instances of a sub-strings from a list of strings.
 
@@ -127,5 +128,53 @@ def remove_substring_from_string_list(raw_sample_list: 'list[str]',sub_string_to
             else:
                 clean_name += char
         clean_sample_list.append(clean_name)
-    
+
     return clean_sample_list
+
+
+def find_symbol_in_string(name: str, symbol: str) -> list[int]:
+    # list of integers containing the indexes of the dollar signs in the string
+    dollar_signs_indexes: list[int] = []
+    for i in range(name.count(symbol)):
+        dollar_signs_indexes.append(name.find(symbol) + i)
+        name = name.replace(symbol, "", 1)
+    return dollar_signs_indexes
+
+
+def convert_chars_to_string(chars: 'list[str]'):
+    '''
+    Take a list of characters and converts appends them to an empty string
+    ---
+    Params:
+    - chars : list of characters i.e. ["c","a", "r"]
+    ---
+    Returns:
+    - string: a string i.e. "car" 
+    '''
+    new_string = ''
+    for char in chars:
+        new_string += char
+    return new_string
+
+def convert_chars_to_string_recursive(chars: 'list[str]'):
+    '''
+    Take a list of characters and converts appends them to an empty string
+    ---
+    Params:
+    - chars : list of characters i.e. ["c","a", "r"]
+    ---
+    Returns:
+    - string: a string i.e. "car" 
+    '''
+    new_string = ''
+    while type(chars) != str:
+        for char in chars:
+            new_string += char
+        result = convert_chars_to_string_recursive(chars)
+        chars = result
+
+
+def split_without_removing_symbol(string: str, symbol: str):
+    string = string.replace(symbol, f"%%{symbol}")
+    list_str = string.split(f"%{symbol}")
+    return [name.replace("%",symbol) for name in list_str]
