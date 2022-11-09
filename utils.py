@@ -1,4 +1,14 @@
 import pandas as pd
+import os
+
+
+def append_list_to_csv(filename: str, _list: list):
+    if not os.path.isfile(filename):
+        pd.DataFrame(data={"data" : _list}).to_csv(filename, index=False)
+    else:
+        old_df = pd.read_csv(filename)
+        new_df = pd.DataFrame(data={"data" : _list})
+        pd.concat([old_df, new_df], axis=0).to_csv(filename, index=False)
 
 
 def find_substring(string: str, sub_string: str):
@@ -156,6 +166,7 @@ def convert_chars_to_string(chars: 'list[str]'):
         new_string += char
     return new_string
 
+
 def convert_chars_to_string_recursive(chars: 'list[str]'):
     '''
     Take a list of characters and converts appends them to an empty string
@@ -177,4 +188,4 @@ def convert_chars_to_string_recursive(chars: 'list[str]'):
 def split_without_removing_symbol(string: str, symbol: str):
     string = string.replace(symbol, f"%%{symbol}")
     list_str = string.split(f"%{symbol}")
-    return [name.replace("%",symbol) for name in list_str]
+    return [name.replace("%", symbol) for name in list_str]

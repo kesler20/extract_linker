@@ -71,4 +71,3 @@ for name in df[:data_set]:
     time.sleep(1)
 
 
-data = {"code": [], "linkers": [],  "metals": [],  "solvent": []}

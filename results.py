@@ -19,10 +19,13 @@ for name in df:
         cnt -= 2
 
     # remove solvents
-    name = name.split(" ")[0]
+    name = name.split(" ")
+    name = name[0]
+    append_list_to_csv("solvents.csv", [name[1:]])
 
     # replace all the metals
     name = replace_with_string(convert_chars_to_string(name), metals, "")
+    append_list_to_csv("metals.csv", [name[1:]])
 
     # replace exclamation marks
     name = name.replace("!", "")
@@ -46,23 +49,25 @@ for name in df:
             linkers.append(linker)
         else:
             linkers.append(linker[:index_of_dash_1[-1]])
-    
+
     # data processing
     results.append(linkers)
     if len(linkers) > max_len:
-      max_len = len(linkers)
-    
+        max_len = len(linkers)
+
     if len(linkers) < max_len:
-      for i in range(max_len - len(linkers)):
-        linkers.append(None)
-      
+        for i in range(max_len - len(linkers)):
+            linkers.append(None)
+
     if os.path.isfile("result.csv"):
         old_rows = pd.read_csv("result.csv")
-        new_row = pd.DataFrame({ f'Linker {index}' : [linker] for index, linker in enumerate(linkers,1) })
+        new_row = pd.DataFrame(
+            {f'Linker {index}': [linker] for index, linker in enumerate(linkers, 1)})
         new_df = pd.concat([old_rows, new_row])
         new_df.to_csv("result.csv", index=False)
     else:
-        new_df = pd.DataFrame({ f'Linker {index}' : [linker] for index, linker in enumerate(linkers,1) })
+        new_df = pd.DataFrame(
+            {f'Linker {index}': [linker] for index, linker in enumerate(linkers, 1)})
         new_df.to_csv("result.csv", index=False)
 
 
