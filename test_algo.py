@@ -29,31 +29,31 @@ for name in df[:data_set]:
 
     # replace all the metals
     name = replace_with_string(convert_chars_to_string(name), metals, "")
-    print("\nstep 2 replace all the metals:\n", name)
+    print("\nstep 3 replace all the metals:\n", name)
     time.sleep(1)
 
 
     # replace exclamation marks
     name = name.replace("!", "")
-    print("\nstep 3 replace exclamation marks:\n", name)
+    print("\nstep 4 replace exclamation marks:\n", name)
     time.sleep(1)
 
 
     # replace ato with ate
     name = name.replace("ato", "ate")
-    print("\nstep 4 replace ato with ate:\n", name)
+    print("\nstep 5 replace ato with ate:\n", name)
     time.sleep(1)
 
     # split the name by (m to separate linkers
     name = name.split("(m")
-    print("\nstep 5 split the name by (m to separate linkers:\n", name)
+    print("\nstep 6 split the name by (m to separate linkers:\n", name)
     time.sleep(1)
 
 
     # replace everything which does not start with the u- this will return a list of linkers
     name = [name.replace(
         "u-", "") for name in list(filter(lambda sub_string: sub_string.startswith("u"), name))]
-    print("\nstep 6 replace everything which does not start with the u- this will return a list of linkers\n", name)
+    print("\nstep 7 replace everything which does not start with the u- this will return a list of linkers\n", name)
     time.sleep(1)
 
 

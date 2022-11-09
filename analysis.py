@@ -1,13 +1,13 @@
 import pandas as pd
+import os
 
+raw_dataset = pd.read_excel("3ddigimofs_raw.tab.xlsx")
 linkers = pd.read_csv("result.csv")
 metals = pd.read_csv("metals.csv")
 solvents = pd.read_csv("solvents.csv")
-code = pd.read_csv("3ddigimofs_raw.tab.xlsx")["[REFCODE]"]
-print(linkers)
-
+code = raw_dataset["[REFCODE]"]
+original = raw_dataset["[_chemical_name_systematic]"]
 schema = {"code": [], "linkers": [],  "metals": [],  "solvent": []}
-print(pd.merge(code, linkers, metals, solvents).to_csv("merged_result.csv"))
 
 rows_to_drop = []
 for index, row in enumerate(linkers[linkers.columns[0]]):
@@ -16,3 +16,7 @@ for index, row in enumerate(linkers[linkers.columns[0]]):
 
 linkers.drop(rows_to_drop, axis=0, inplace=True)
 print(linkers)
+
+# for file in os.listdir(os.getcwd()):
+#     if file.endswith(".csv") or file.endswith(".xlsx"):
+#         os.system(f"echo start excel {file}")
