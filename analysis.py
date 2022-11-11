@@ -9,14 +9,17 @@ code = raw_dataset["[REFCODE]"]
 original = raw_dataset["[_chemical_name_systematic]"]
 schema = {"code": [], "linkers": [],  "metals": [],  "solvent": []}
 
-rows_to_drop = []
-for index, row in enumerate(linkers[linkers.columns[0]]):
-    if str not in [type(linker) for linker in linkers.loc[index]]:
-        rows_to_drop.append(index)
+linkers["raw linkers"] = original
+linkers["code"] = code
+linkers["metals"] = metals
+linkers["solvents"] = solvents
 
-linkers.drop(rows_to_drop, axis=0, inplace=True)
-print(linkers)
+linkers.to_csv("final_result.csv", index=False)
 
-# for file in os.listdir(os.getcwd()):
-#     if file.endswith(".csv") or file.endswith(".xlsx"):
-#         os.system(f"echo start excel {file}")
+# rows_to_drop = []
+# for index, row in enumerate(linkers[linkers.columns[0]]):
+#     if str not in [type(linker) for linker in linkers.loc[index]]:
+#         rows_to_drop.append(index)
+
+# linkers.drop(rows_to_drop, axis=0, inplace=True)
+# print(linkers)

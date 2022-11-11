@@ -4,9 +4,9 @@ from utils import *
 import pandas as pd
 metals = convert_file_content_into_list(
     f"chars_to_remove/list_of_metals.txt")
-df = pd.read_excel("3ddigimofs_raw.tab.xlsx")
+df = pd.read_csv("clean_chemical_name_systematic.csv")
 
-df: list[str] = [row for row in df["[_chemical_name_systematic]"]]
+df: list[str] = [row for row in df["0"]]
 results = []
 max_len = 0
 for name in df:
@@ -20,12 +20,13 @@ for name in df:
 
     # remove solvents
     name = name.split(" ")
-    name = name[0]
     append_list_to_csv("solvents.csv", [name[1:]])
+    name = name[0]
 
     # replace all the metals
-    name = replace_with_string(convert_chars_to_string(name), metals, "")
-    append_list_to_csv("metals.csv", [name[1:]])
+    name, metals_removed = replace_with_string(
+        convert_chars_to_string(name), metals, "")
+    append_list_to_csv("metals.csv", metals_removed)
 
     # replace exclamation marks
     name = name.replace("!", "")

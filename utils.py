@@ -45,10 +45,13 @@ def replace_with_string(raw_string: str, list_of_strings_to_replace: 'list[str ]
     - clean_string : the initial string with the replaced strings
     '''
     clean_string = ""
+    sub_strings_removed = []
     for string in list_of_strings_to_replace:
+        if find_substring(raw_string,string) != -1:
+            sub_strings_removed.append(string)            
         clean_string = raw_string.replace(string, strings_to_replace_with)
         raw_string = clean_string
-    return clean_string
+    return clean_string, sub_strings_removed
 
 
 def convert_file_content_into_list(filename: str):

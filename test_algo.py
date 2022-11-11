@@ -32,12 +32,10 @@ for name in df[:data_set]:
     print("\nstep 3 replace all the metals:\n", name)
     time.sleep(1)
 
-
     # replace exclamation marks
     name = name.replace("!", "")
     print("\nstep 4 replace exclamation marks:\n", name)
     time.sleep(1)
-
 
     # replace ato with ate
     name = name.replace("ato", "ate")
