@@ -1,7 +1,7 @@
 from utils import *
 import time
 import pandas as pd
-df = pd.read_excel("3ddigimofs_raw.tab.xlsx")
+df = pd.read_excel("3D_MOF_subset.tab.xlsx")
 
 clean_chemical_name_systematic = []
 
