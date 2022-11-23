@@ -2,7 +2,7 @@ from utils import *
 import time
 import pandas as pd
 df = pd.read_excel("3D_MOF_subset.tab.xlsx")
-
+df = df.dropna()
 clean_chemical_name_systematic = []
 
 for name in df["[_chemical_name_systematic]"]:

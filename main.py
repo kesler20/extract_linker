@@ -1,97 +1,75 @@
-import pandas as pd
+import os
+from numpy import nan
 from utils import *
+import pandas as pd
+metals = convert_file_content_into_list(
+    f"chars_to_remove/list_of_metals.txt")
+df = pd.read_csv("clean_chemical_name_systematic.csv")
 
-# load the raw file with approximately 10k names
-path = "3ddigimofs_raw.tab.xlsx"
-df = pd.read_excel(path)
+df: list[str] = [row for row in df["0"]]
+results = []
+max_len = 0
+for name in df:
+    # replace $ and numbers before them
+    index_of_dollar_signs = find_symbol_in_string(name, "$")
+    cnt = 0
+    for index in index_of_dollar_signs:
+        index += cnt
+        name = name.replace(name[index - 1] + name[index], "", 1)
+        cnt -= 2
 
-# turn the raw names into a list
-sample_df = [name for name in df["[_chemical_name_systematic]"]]
+    # remove solvents
+    name = name.split(" ")
+    append_list_to_csv("solvents.csv", [name[1:]])
+    name = name[0]
 
-if __name__ == "__main__":
-    # initialise steps 1-7 
-    step_1: 'list[str]' = [
-        "catena-(", "catena-[", "catena(", "catena[", ""]
-    step_2 = [
-        "$-", "$", "mu-", "mu!", "!", "i)", "%"]
+    # replace all the metals
+    name, metals_removed = replace_with_string(
+        convert_chars_to_string(name), metals, "")
+    append_list_to_csv("metals.csv", metals_removed)
 
-    step_3_4 = convert_file_content_into_list(r"chars_to_remove\step_3_4.txt")
-    step_3_4.append("%")
+    # replace exclamation marks
+    name = name.replace("!", "")
 
-    step_5 = convert_file_content_into_list(r"chars_to_remove\list_of_metals.txt")
-    step_5.append("%")
+    # replace ato with ate
+    name = name.replace("ato", "ate")
 
-    step_6 = [" ", "_"]
-    step_7a = [" %", "% ", ""]
-    step_7b = ["-(%", "%"]
+    # split the name by (m to separate linkers
+    name = name.split("(m")
 
-    steps = [step_1, step_2, step_3_4, step_5, step_6, step_7a, step_7b]
+    # replace everything which does not start with the u- this will return a list of linkers
+    name = [name.replace(
+        "u-", "") for name in list(filter(lambda sub_string: sub_string.startswith("u"), name))]
 
-    # apply step 1 to 7 to sample_df
-    for step in steps:
-        sample_df = [replace_with_string(
-            name, step[:-1], step[-1]) for name in sample_df]
+    # initialise the final list of linkers
+    linkers = []
+    for linker in name:
+        # remove the last dash in the name of the linker
+        index_of_dash_1 = find_symbol_in_string(linker, ")-")
+        if len(index_of_dash_1) == 0:
+            linkers.append(linker)
+        else:
+            linkers.append(linker[:index_of_dash_1[-1]])
 
-    # steps 8 to 11 will be repeated
-    def steps_to_repeat(sample_df):
-        # step 8
-        # remove all the %% until there are only %
-        sample_df_8a = replace_string_recursively(sample_df, r"%%", "%")
+    # data processing
+    results.append(linkers)
+    if len(linkers) > max_len:
+        max_len = len(linkers)
 
-        # replace all the -- with %
-        sample_df_8b = replace_string_recursively(sample_df_8a, "--", "%")
+    if len(linkers) < max_len:
+        for i in range(max_len - len(linkers)):
+            linkers.append(None)
 
-        ####################################### MODIFIED STEPS (9-14) #####################
-        # removing leading % in each name
-        sample_df_11a = []
-        for name in sample_df_8b:
-            if name[0] == "%":
-                clean_name = ""
-                for char in list(name)[1:]:
-                    clean_name += char
-                name = clean_name
-            sample_df_11a.append(name)
-
-        # remove all the solvents
-        list_of_solvents = convert_file_content_into_list(r"chars_to_remove\csd_solvent_list.txt")
-        sample_df_11b: 'list[str]' = [replace_with_string(
-            name, list_of_solvents, "") for name in sample_df_11a]
-
-        # remove all the words containing solvate
-        return remove_substring_from_string_list(sample_df_11b,"solvate","%")
-
-    sample_df_11c = steps_to_repeat(sample_df)
-
-    step_14 = [")-(", ") (", "  ", "%", "%", "%))", "%)",
-            "%]", "(%", "-%", "%"]
-    sample_df_14: 'list[str]' = []
-    for name in sample_df_11c:
-        sample_df_14.append(replace_with_string(name, step_14[:-1], step_14[-1]))
-
-    ########## DUE TO THE EARLIER MODIFICATION THE FOLLOWING STEPS (15-18) WILL BE MODIFIED ###########
-    sample_df_15: 'list[str]' = []
-    for name in sample_df_14:
-        name = name.replace(" -bis(", "-bis(")
-        name = name.replace(" -carboxylat", "-carboxylat")
-        sample_df_15.append(name)
-
-    # remove all the words containing unknown
-    sample_df_16 = remove_substring_from_string_list(sample_df_15,"unknown","%")
-
-    # step 17 consists of repeating steps 8-11
-    # for i in range(2):
-    #     sample_df_17 = steps_to_repeat(sample_df_16)
-    #     sample_df_16 = sample_df_17
-
-    # steps 20-21
-    step_20_21 = convert_file_content_into_list(r"chars_to_remove\step_20_21.txt")
-    step_20_21.append("%")
-
-    sample_df_21 = [replace_with_string(name,step_20_21,"%") for name in sample_df_16]
-    
-    sample_df_22a = [replace_with_string(name, ["$"], "%") for name in sample_df_21]
-    sample_df_22b = replace_string_recursively(sample_df_22a,r"%%","%") 
-    pp(sample_df_22b)
+    if os.path.isfile("result.csv"):
+        old_rows = pd.read_csv("result.csv")
+        new_row = pd.DataFrame(
+            {f'Linker {index}': [linker] for index, linker in enumerate(linkers, 1)})
+        new_df = pd.concat([old_rows, new_row])
+        new_df.to_csv("result.csv", index=False)
+    else:
+        new_df = pd.DataFrame(
+            {f'Linker {index}': [linker] for index, linker in enumerate(linkers, 1)})
+        new_df.to_csv("result.csv", index=False)
 
 
-
+os.system("start excel result.csv")
