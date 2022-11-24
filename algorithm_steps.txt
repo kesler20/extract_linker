@@ -1,0 +1,8 @@
+# replace $ and numbers before them
+# remove solvents (searches for the first space and saves the first half as a linker the second as solvent)
+# remove all the metals (looks for the metals in the list_of_metals.txt file)
+# remove exclamation marks
+# remove ato with ate
+# split the name by "(m" to separate linkers 
+# remove everything which does not start with the u- 
+# remove the last dash in the name of the linker

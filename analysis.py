@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 
-raw_dataset = pd.read_excel("3ddigimofs_raw.tab.xlsx")
+raw_dataset = pd.read_excel("3D_MOF_subset.tab.xlsx")
 linkers = pd.read_csv("result.csv")
 metals = pd.read_csv("metals.csv")
 solvents = pd.read_csv("solvents.csv")
